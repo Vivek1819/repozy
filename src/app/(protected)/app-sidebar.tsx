@@ -86,7 +86,7 @@ export function AppSidebar() {
                                                 setProjectId(project.id)
                                             }}>
                                                 <div className={cn(
-                                                    'rounded-sm border size-6 flex items-center justify-center text-sm bg-white text-primary',
+                                                    'rounded-full border size-8 flex items-center justify-center text-sm bg-white text-primary',
                                                     {
                                                         'bg-primary text-white': project.id === projectId
                                                     }
