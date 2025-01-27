@@ -14,7 +14,7 @@ export const loadGithubRepo = async (githubUrl: string, githubToken?: string) =>
         unknown: 'warn',
         maxConcurrency: 5
     })
-    const docs = await loader.load();
+    const docs = await loader.load(); 
     return docs;
 }
 

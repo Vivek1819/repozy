@@ -29,7 +29,7 @@ const CommitLog = () => {
                                             <span className='font-medium text-gray-900'>{commit.commitAuthorName}</span>{" "}
                                             <span className='inline-flex items-center'>
                                                 committed
-                                                <ExternalLink className='ml-1 size-4' />
+                                                <ExternalLink className='ml-1 size-3' />
                                             </span>
                                         </Link>
                                     </div>

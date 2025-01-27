@@ -14,8 +14,6 @@ export const octokit = new Octokit({
     auth: process.env.GITHUB_TOKEN
 })
 
-const githubUrl = 'https://github.com/docker/genai-stack'
-
 export const getCommitHashes = async (githubUrl: string): Promise<Response[]> => {
     const [owner, repo] = githubUrl.split('/').slice(-2);
 
@@ -71,7 +69,8 @@ export const pollCommits = async (projectId: string) => {
 async function summariseCommit(githubUrl: string, commitHash: string) {
     const { data } = await axios.get(`${githubUrl}/commit/${commitHash}.diff`, {
         headers: {
-            Accept: 'application/vnd.github.v3.diff'
+            Accept: 'application/vnd.github.v3.diff',
+            Authorization: `token ${process.env.GITHUB_TOKEN}`
         }
     })
     return await aiSummariseCommit(data) || "";
