@@ -77,6 +77,7 @@ export async function summariseCode(doc: Document) {
         ])
         return response.response.text();
     } catch (error) {
+        console.log(error);
         return "Privacy block";
     }
 

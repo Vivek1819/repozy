@@ -6,26 +6,57 @@ import { Textarea } from '@/components/ui/textarea';
 import useProject from '@/hooks/use-project'
 import React, { useState } from 'react'
 import Image from 'next/image'
+import { askQuestion } from './actions';
+import { readStreamableValue } from 'ai/rsc';
+import MDEditor from '@uiw/react-md-editor'
+import CodeReferences from './code-references';
 
 const AskQuestionCard = () => {
     const { project } = useProject();
     const [question, setQuestion] = useState('');
     const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [fileReferences, setFilesReferences] = useState<{ fileName: string, sourceCode: string, summary: string }[]>([]);
+    const [answer, setAnswer] = useState('');
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        setAnswer('');
+        setFilesReferences([]);
         e.preventDefault();
+        if (!project?.id) return;
+        setLoading(true);
 
+        const { output, fileReferences } = await askQuestion(question, project.id);
         setOpen(true);
+        setFilesReferences(fileReferences);
+
+        for await (const delta of readStreamableValue(output)) {
+            if (delta) {
+                setAnswer(ans => ans + delta)
+            }
+        }
+        setLoading(false);
     }
+
     return (
         <>
             <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent>
+                <DialogContent className='sm: max-w-[80vw]'>
                     <DialogHeader>
                         <DialogTitle>
                             <Image src='/logo.png' alt='Logo' width={70} height={70} />
                         </DialogTitle>
                     </DialogHeader>
+                    <MDEditor.Markdown 
+                        source={answer} 
+                        className='max-w-[70vw] !h-full max-h-[40vh] overflow-scroll bg-transparent' 
+                    />
+                    <div className="h-4"></div>
+                    <CodeReferences fileReferences={fileReferences}/>
+
+                    <Button type='button' onClick={()=> setOpen(false)}>
+                        Close
+                    </Button>
                 </DialogContent>
             </Dialog>
             <Card className='relative col-span-1'>
@@ -34,9 +65,13 @@ const AskQuestionCard = () => {
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={onSubmit}>
-                        <Textarea placeholder='How do I change the styling of the pages?' />
+                        <Textarea
+                            placeholder='How do I change the styling of the pages?'
+                            value={question}
+                            onChange={(e) => setQuestion(e.target.value)}
+                        />
                         <div className='h-4'></div>
-                        <Button type='submit'>
+                        <Button type='submit' disabled={loading}>
                             Ask Repozy
                         </Button>
                     </form>
