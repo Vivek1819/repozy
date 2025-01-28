@@ -66,6 +66,6 @@ export async function askQuestion(question: string, projectId: string) {
 
     return {
         output: stream.value,
-        fileReferences: result
+        filesReferences: result
     };
 }
