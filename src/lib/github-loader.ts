@@ -2,6 +2,7 @@ import { GithubRepoLoader } from "@langchain/community/document_loaders/web/gith
 import { Document } from "@langchain/core/documents";
 import { generateEmbedding, summariseCode } from "./gemini";
 import { db } from "@/server/db";
+import axios from "axios";
 
 export const loadGithubRepo = async (githubUrl: string, githubToken?: string) => {
     const loader = new GithubRepoLoader(githubUrl, {
@@ -48,6 +49,17 @@ export const indexGithubRepo = async (projectId: string, githubUrl: string, gith
         UPDATE "SourceCodeEmbedding"
         SET "summaryEmbedding"= ${embedding.embedding} :: vector
         WHERE "id" = ${sourceCodeEmbedding.id}`
+
     }))
 
 }
+
+async function checkRateLimit() {
+    const response = await axios.get('https://api.github.com/rate_limit', {
+        headers: {
+            Authorization: `token ${process.env.GITHUB_TOKEN}`
+        }
+    });
+    console.log('Rate Limit:', response.data);
+}
+

@@ -12,6 +12,7 @@ import MDEditor from '@uiw/react-md-editor'
 import CodeReferences from './code-references';
 import { api } from '@/trpc/react';
 import { toast } from 'sonner';
+import useRefetch from '@/hooks/use-refetch';
 
 const AskQuestionCard = () => {
     const { project } = useProject();
@@ -41,6 +42,8 @@ const AskQuestionCard = () => {
         setLoading(false);
     }
 
+    const refetch = useRefetch()
+
     return (
         <>
             <Dialog open={open} onOpenChange={setOpen}>
@@ -50,28 +53,31 @@ const AskQuestionCard = () => {
                             <DialogTitle>
                                 <Image src='/logo.png' alt='Logo' width={70} height={70} />
                             </DialogTitle>
-                            <Button variant={'outline'} onClick={() => {
-                                saveAnswer.mutate({
-                                    projectId: project!.id,
-                                    question,
-                                    answer,
-                                    filesReferences
-                                }, {
-                                    onSuccess: () => {
-                                        toast.success("Answer saved!");
-                                    },
-                                    onError: () => {
-                                        toast.error('Failed to save Answer');
-                                    }
-                                })
-                            }}>
+                            <Button variant={'outline'}
+                                disabled={saveAnswer.isPending}
+                                onClick={() => {
+                                    saveAnswer.mutate({
+                                        projectId: project!.id,
+                                        question,
+                                        answer,
+                                        filesReferences
+                                    }, {
+                                        onSuccess: () => {
+                                            toast.success("Answer saved!");
+                                            refetch();
+                                        },
+                                        onError: () => {
+                                            toast.error('Failed to save Answer');
+                                        }
+                                    })
+                                }}>
                                 Save Answer
                             </Button>
                         </div>
                     </DialogHeader>
                     <MDEditor.Markdown
                         source={answer}
-                        className='max-w-[70vw] !h-full max-h-[40vh] overflow-scroll bg-transparent'
+                        className='max-w-[70vw] !h-full max-h-[30vh] overflow-scroll bg-transparent'
                     />
                     <div className="h-4"></div>
                     <CodeReferences filesReferences={filesReferences} />

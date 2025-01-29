@@ -13,8 +13,8 @@ const DashboardPage = () => {
   return (
     <div>
       <div className='flex items-center justify-between flex-wrap gap-y-4'>
-        <div className='w-fit rounded-md bg-primary px-4 py-3'>
-          <div className='flex items-center'>
+        <div className='w-full rounded-md bg-primary px-4 py-3 items-center'>
+          <div className='flex items-center justify-center'>
             <Github className='size-6 text-white' />
             <div className='ml-5'>
               <p className='text-sm font-medium text-white'>
@@ -29,12 +29,6 @@ const DashboardPage = () => {
         </div>
 
         <div className='h-4'></div>
-        <div className='flex items-center gap-4'>
-          TeamMembers
-          Invite button
-          Archive
-        </div>  
-
       </div>
       <div className='mt-4'>
         <div className='grid grid-cols-1 gap-4'>
