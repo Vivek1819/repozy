@@ -40,7 +40,6 @@ export function AppSidebar() {
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
-                    <div className="h-4"></div>
                     <SidebarGroupLabel>
                         Application
                     </SidebarGroupLabel>

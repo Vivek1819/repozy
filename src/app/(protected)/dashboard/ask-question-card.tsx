@@ -8,7 +8,8 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 import { askQuestion } from './actions';
 import { readStreamableValue } from 'ai/rsc';
-import MDEditor from '@uiw/react-md-editor'
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import CodeReferences from './code-references';
 import { api } from '@/trpc/react';
 import { toast } from 'sonner';
@@ -75,12 +76,17 @@ const AskQuestionCard = () => {
                             </Button>
                         </div>
                     </DialogHeader>
-                    <MDEditor.Markdown
-                        source={answer}
-                        className='max-w-[70vw] !h-full max-h-[30vh] overflow-scroll bg-transparent'
-                    />
+
+                    <div className='max-w-[70vw] !h-full max-h-[30vh] overflow-y-auto overflow-x-hidden bg-transparent p-4 border rounded-lg'>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {answer}
+                        </ReactMarkdown>
+                    </div>
+
                     <div className="h-4"></div>
-                    <CodeReferences filesReferences={filesReferences} />
+                    <div className="mt-4">
+                        <CodeReferences filesReferences={filesReferences} />
+                    </div>
 
                     <Button type='button' onClick={() => setOpen(false)}>
                         Close
@@ -109,4 +115,4 @@ const AskQuestionCard = () => {
     )
 }
 
-export default AskQuestionCard
+export default AskQuestionCard;

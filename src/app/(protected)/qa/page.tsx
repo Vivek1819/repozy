@@ -3,8 +3,9 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import useProject from '@/hooks/use-project'
 import { api } from '@/trpc/react';
 import React from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import AskQuestionCard from '../dashboard/ask-question-card';
-import MDEditor from '@uiw/react-md-editor';
 import CodeReferences from '../dashboard/code-references';
 
 const QAPage = () => {
@@ -49,10 +50,12 @@ const QAPage = () => {
       {question && (
         <SheetContent className='sm:max-w-[80vw]'>
           <SheetHeader>
-            <SheetTitle>
-              {question.question}
-            </SheetTitle>
-            <MDEditor.Markdown source={question.answer} />
+            <SheetTitle className='text-xl text-center p-5'>{question.question}</SheetTitle>
+            <div className='max-w-[70vw] !h-full max-h-[30vh] overflow-y-auto overflow-x-hidden bg-transparent p-4 border rounded-lg'>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {question.answer}
+              </ReactMarkdown>
+            </div>
             <CodeReferences filesReferences={(question.filesReference ?? []) as any} />
           </SheetHeader>
         </SheetContent>
@@ -61,4 +64,4 @@ const QAPage = () => {
   )
 }
 
-export default QAPage
+export default QAPage;

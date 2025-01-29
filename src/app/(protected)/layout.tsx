@@ -13,7 +13,7 @@ const SidebarLayout = ({ children }: Props) => {
         <SidebarProvider>
             <AppSidebar />
             <main className='w-full m-2'>
-                <div className='flex items-center gap-2 border-sidebar-border bg-sidebar border shadow rounded-md p-2 px-4'>
+                <div className='flex items-center gap-2 border-sidebar-border bg-sidebar border shadow rounded-md p-2 px-8'>
                     <div className='flex items-center justify-center w-full'>
                         <Image src='/logo.png' alt='Logo' height={40} width={40} />
                         <span className='text-md text-center'>
